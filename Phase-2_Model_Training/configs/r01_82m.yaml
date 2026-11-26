@@ -1,0 +1,39 @@
+run:
+  name: geninherit_r01_82m
+  seed: 1337
+  session_hours: 11.0
+
+model:
+  vocab_size: 4096
+  d_model: 1024
+  n_layers: 7            # Rung 1: 7 layers (82.0M parameters)
+  n_heads: 16
+  n_kv_heads: 4          # GQA 4:1
+  head_dim: 64
+  d_ff: 2752             # SwiGLU hidden dim
+  max_seq_len: 2048
+  rope_base: 10000.0
+  n_slots: 128
+  n_gens: 16
+  n_fields: 64
+  n_fourier_frequencies: 8
+  qk_norm: true
+
+optim:
+  peak_lr: 3.0e-4
+  min_lr: 3.0e-5
+  weight_decay: 0.1
+  betas: [0.9, 0.95]
+  warmup_steps: 500
+  micro_batch: 4         # Memory-efficient for T4 16GB
+  accum: 16              # 4 x 16 x 2048 = 131,072 tokens per step
+  total_tokens: 600000000
+
+loss:
+  lambda_inv: 0.1
+  lambda_z: 1.0e-4
+
+eval:
+  eval_every: 250
+  ckpt_every: 250
+
