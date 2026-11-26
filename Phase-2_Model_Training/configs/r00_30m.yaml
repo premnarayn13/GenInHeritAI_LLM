@@ -1,0 +1,39 @@
+run:
+  name: geninherit_r00_30m
+  seed: 1337
+  session_hours: 11.0
+
+model:
+  vocab_size: 4096
+  d_model: 768
+  n_layers: 4            # Rung 0: 4 layers (28.1M parameters - ultra-fast training)
+  n_heads: 8
+  n_kv_heads: 2          # GQA 4:1
+  head_dim: 96
+  d_ff: 2048             # SwiGLU hidden dim
+  max_seq_len: 2048
+  rope_base: 10000.0
+  n_slots: 128
+  n_gens: 16
+  n_fields: 64
+  n_fourier_frequencies: 8
+  qk_norm: true
+
+optim:
+  peak_lr: 4.0e-4
+  min_lr: 4.0e-5
+  weight_decay: 0.1
+  betas: [0.9, 0.95]
+  warmup_steps: 250
+  micro_batch: 4         # Memory-efficient for T4 16GB
+  accum: 16              # 4 x 16 x 2048 = 131,072 tokens per step
+  total_tokens: 150000000 # 150 Million tokens (finishes in ~45-50 minutes!)
+
+loss:
+  lambda_inv: 0.1
+  lambda_z: 1.0e-4
+
+eval:
+  eval_every: 150
+  ckpt_every: 150
+
